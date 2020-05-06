@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "tsc -w --p src",
     "build": "rm -rf dist && tsc -p src",
-    "prepublishOnly": "yarn build && np --no-cleanup --yolo --no-publish"
+    "prepublishOnly": "np --no-cleanup --yolo --no-publish"
   },
   "keywords": [],
   "author": "chencheng <sorrycc@gmail.com>",
@@ -37,6 +37,7 @@
     "@types/babel__traverse": "^7.0.11",
     "@types/webpack": "^4.41.12",
     "lint-staged": "^10.2.1",
+    "np": "^6.2.3",
     "prettier": "^2.0.5",
     "typescript": "^3.8.3",
     "umi": "^3.1.3",
