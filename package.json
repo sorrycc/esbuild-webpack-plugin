@@ -1,5 +1,5 @@
 {
-  "name": "webpack-plugin-esbuild",
+  "name": "esbuild-webpack-plugin",
   "version": "1.0.0-beta.2",
   "description": "Use esbuild as minifier.",
   "main": "dist/index.js",
@@ -11,6 +11,9 @@
   "scripts": {
     "dev": "tsc -w --p src",
     "build": "rm -rf dist && tsc -p src",
+    "build:example": "APP_ROOT=example BABEL_CACHE=none TERSER_CACHE=none umi build",
+    "build:example:esbuild": "ESBUILD=1 APP_ROOT=example BABEL_CACHE=none TERSER_CACHE=none umi build",
+    "build:example:nocompress": "COMPRESS=none APP_ROOT=example BABEL_CACHE=none TERSER_CACHE=none umi build",
     "prepublishOnly": "np --no-cleanup --yolo --no-publish"
   },
   "keywords": [],
@@ -36,6 +39,8 @@
   "devDependencies": {
     "@types/babel__traverse": "^7.0.11",
     "@types/webpack": "^4.41.12",
+    "antd": "^4.2.0",
+    "bizcharts": "^4.0.2",
     "lint-staged": "^10.2.1",
     "np": "^6.2.3",
     "prettier": "^2.0.5",

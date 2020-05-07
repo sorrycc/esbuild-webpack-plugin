@@ -1,3 +1,3 @@
 export default {
-  plugins: [require.resolve('../dist/umiPlugin')],
+  plugins: process.env.ESBUILD ? [require.resolve('../dist/umiPlugin')] : [],
 };

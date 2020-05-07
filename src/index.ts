@@ -3,12 +3,12 @@ import { ModuleFilenameHelpers, Compiler, compilation } from 'webpack';
 import { RawSource } from 'webpack-sources';
 import { startService, Service } from 'esbuild';
 
-let _service: Service;
+let service: Service;
 const ensureService = async () => {
-  if (!_service) {
-    _service = await startService();
+  if (!service) {
+    service = await startService();
   }
-  return _service;
+  return service;
 };
 
 export default class ESBuildPlugin {
@@ -52,8 +52,8 @@ export default class ESBuildPlugin {
     );
 
     compiler.hooks.afterEmit.tapPromise(plugin, async () => {
-      if (_service) {
-        await _service.stop();
+      if (service) {
+        await service.stop();
       }
     });
   }
