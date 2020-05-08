@@ -42,7 +42,7 @@ export default class ESBuildPlugin {
                 } catch (e) {}
                 // @ts-ignore
                 compilation.updateAsset(file, (old: string) => {
-                  return new RawSource(code.js || code.css || '');
+                  return new RawSource(code.js || '');
                 });
               }
             }

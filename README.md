@@ -23,6 +23,11 @@ $ yarn build:example:nocompress
 
 ## Usage
 
+## TODO
+
+* [ ] Support SourceMap
+* [ ] CI and TestCase
+
 ## LICENSE
 
 MIT
