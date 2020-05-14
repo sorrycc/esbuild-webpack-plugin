@@ -51,7 +51,7 @@ export default class ESBuildPlugin {
       },
     );
 
-    compiler.hooks.afterEmit.tapPromise(plugin, async () => {
+    compiler.hooks.done.tapPromise(plugin, async () => {
       if (service) {
         await service.stop();
       }
