@@ -11,6 +11,9 @@ $ yarn add esbuild-webpack-plugin
 ## Test
 
 ```bash
+// Get prepared
+$ yarn && yarn build
+
 // Minify with terser
 $ yarn build:example
 
