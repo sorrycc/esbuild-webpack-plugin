@@ -1,21 +1,59 @@
 // @ts-ignore
 import { ModuleFilenameHelpers, Compiler, compilation } from 'webpack';
-import { RawSource } from 'webpack-sources';
+import { RawSource, SourceMapSource } from 'webpack-sources';
 import { startService, Service } from 'esbuild';
 
-let service: Service;
-const ensureService = async () => {
-  if (!service) {
-    service = await startService();
-  }
-  return service;
-};
-
 export default class ESBuildPlugin {
-  constructor(options = {}) {}
+  options = {};
+  static service: Service;
+
+  constructor(options: { minify: boolean }) {
+    this.options = options;
+  }
+
+  static async ensureService(enforce?: boolean) {
+    if (!this.service || enforce) {
+      this.service = await startService();
+    }
+  }
+
+  async transformCode({
+    source,
+    file,
+    devtool,
+  }: {
+    source: string;
+    file: string;
+    devtool: string | boolean | undefined;
+  }) {
+    let result: any;
+
+    await ESBuildPlugin.ensureService();
+
+    const transform = async () =>
+      await ESBuildPlugin.service.transform(source, {
+        ...this.options,
+        sourcemap: !!devtool,
+        sourcefile: file,
+      });
+
+    try {
+      result = await transform();
+    } catch (e) {
+      if (e.message === 'The service is no longer running') {
+        await ESBuildPlugin.ensureService(true);
+        result = await transform();
+      } else {
+        throw e;
+      }
+    }
+
+    return result;
+  }
 
   apply(compiler: Compiler) {
     const matchObject = ModuleFilenameHelpers.matchObject.bind(undefined, {});
+    const { devtool } = compiler.options;
 
     const plugin = 'ESBuild Plugin';
     compiler.hooks.compilation.tap(
@@ -24,7 +62,6 @@ export default class ESBuildPlugin {
         compilation.hooks.optimizeChunkAssets.tapPromise(
           plugin,
           async (chunks: compilation.Chunk[]) => {
-            const service = await ensureService();
             for (const chunk of chunks) {
               for (const file of chunk.files) {
                 if (!matchObject(file)) {
@@ -34,15 +71,28 @@ export default class ESBuildPlugin {
                   continue;
                 }
 
-                let code = compilation.assets[file].source();
-                try {
-                  code = await service.transform(code, {
-                    minify: true,
-                  });
-                } catch (e) {}
+                const assetSource = compilation.assets[file];
+                const { source, map } = assetSource.sourceAndMap();
+                const result = await this.transformCode({
+                  source,
+                  file,
+                  devtool,
+                });
+
                 // @ts-ignore
                 compilation.updateAsset(file, (old: string) => {
-                  return new RawSource(code.js || '');
+                  if (devtool) {
+                    return new SourceMapSource(
+                      result.js,
+                      file,
+                      result.jsSourceMap,
+                      source,
+                      map,
+                      true,
+                    );
+                  } else {
+                    return new RawSource(result.js || '');
+                  }
                 });
               }
             }
@@ -52,8 +102,8 @@ export default class ESBuildPlugin {
     );
 
     compiler.hooks.done.tapPromise(plugin, async () => {
-      if (service) {
-        await service.stop();
+      if (ESBuildPlugin.service) {
+        await ESBuildPlugin.service.stop();
       }
     });
   }
