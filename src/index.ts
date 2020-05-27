@@ -33,6 +33,7 @@ export default class ESBuildPlugin {
     const transform = async () =>
       await ESBuildPlugin.service.transform(source, {
         ...this.options,
+        minify: true,
         sourcemap: !!devtool,
         sourcefile: file,
       });

@@ -5,6 +5,7 @@ import styles from './index.less';
 
 export default () => {
   const data = [];
+  // debugger;
   return (
     <div>
       <Button type="primary">Foo</Button>
