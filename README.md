@@ -2,6 +2,10 @@
 
 Use [esbuild](https://github.com/evanw/esbuild) as minifier for webpack.
 
+## Why is this package?
+
+[彻底告别编译 OOM，用 esbuild 做压缩器](https://zhuanlan.zhihu.com/p/139219361)。
+
 ## Install
 
 ```bash
@@ -23,13 +27,6 @@ $ yarn build:example:esbuild
 // Do not minify
 $ yarn build:example:nocompress
 ```
-
-## Usage
-
-## TODO
-
-* [ ] Support SourceMap
-* [ ] CI and TestCase
 
 ## LICENSE
 
