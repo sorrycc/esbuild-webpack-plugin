@@ -14,7 +14,7 @@
     "build:example": "APP_ROOT=example BABEL_CACHE=none TERSER_CACHE=none umi build",
     "build:example:esbuild": "ESBUILD=1 APP_ROOT=example BABEL_CACHE=none TERSER_CACHE=none umi build",
     "build:example:nocompress": "COMPRESS=none APP_ROOT=example BABEL_CACHE=none TERSER_CACHE=none umi build",
-    "prepublishOnly": "np --no-cleanup --yolo --no-publish"
+    "prepublishOnly": "npm run build && np --no-cleanup --yolo --no-publish"
   },
   "keywords": [],
   "author": "chencheng <sorrycc@gmail.com>",
