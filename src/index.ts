@@ -28,8 +28,6 @@ export default class ESBuildPlugin {
   }) {
     let result: any;
 
-    await ESBuildPlugin.ensureService();
-
     const transform = async () =>
       await ESBuildPlugin.service.transform(source, {
         ...this.options,
@@ -41,6 +39,7 @@ export default class ESBuildPlugin {
     try {
       result = await transform();
     } catch (e) {
+      // esbuild service might be destroyed when using parallel-webpack
       if (e.message === 'The service is no longer running') {
         await ESBuildPlugin.ensureService(true);
         result = await transform();
@@ -84,7 +83,7 @@ export default class ESBuildPlugin {
                 compilation.updateAsset(file, (old: string) => {
                   if (devtool) {
                     return new SourceMapSource(
-                      result.js,
+                      result.js || '',
                       file,
                       result.jsSourceMap,
                       source,
@@ -101,6 +100,10 @@ export default class ESBuildPlugin {
         );
       },
     );
+
+    compiler.hooks.beforeRun.tapPromise(plugin, async () => {
+      await ESBuildPlugin.ensureService();
+    });
 
     compiler.hooks.done.tapPromise(plugin, async () => {
       if (ESBuildPlugin.service) {
