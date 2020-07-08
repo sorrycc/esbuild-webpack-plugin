@@ -5,3 +5,4 @@
 /example/.umi
 /test/fixtures/**/.umi
 /test/fixtures/**/dist
+/.umi
