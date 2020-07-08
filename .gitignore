@@ -3,5 +3,5 @@
 /yarn.lock
 /example/dist
 /example/.umi
-/src/fixtures/**/.umi
-/src/fixtures/**/dist
+/test/fixtures/**/.umi
+/test/fixtures/**/dist

@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 // @ts-ignore
 import puppeteer from 'puppeteer';
-import http from 'http';
+import * as http from 'http';
 
 test('index', () => {
   expect(existsSync(join(__dirname, 'fixtures/normal/dist'))).toEqual(true);
