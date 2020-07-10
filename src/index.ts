@@ -1,5 +1,4 @@
-// @ts-ignore
-import { ModuleFilenameHelpers, Compiler, compilation } from 'webpack';
+import { Compiler, compilation } from 'webpack';
 import { RawSource, SourceMapSource } from 'webpack-sources';
 import { startService, Service } from 'esbuild';
 
@@ -52,7 +51,6 @@ export default class ESBuildPlugin {
   }
 
   apply(compiler: Compiler) {
-    const matchObject = ModuleFilenameHelpers.matchObject.bind(undefined, {});
     const { devtool } = compiler.options;
 
     const plugin = 'ESBuild Plugin';
@@ -64,9 +62,6 @@ export default class ESBuildPlugin {
           async (chunks: compilation.Chunk[]) => {
             for (const chunk of chunks) {
               for (const file of chunk.files) {
-                if (!matchObject(file)) {
-                  continue;
-                }
                 if (!/\.m?js(\?.*)?$/i.test(file)) {
                   continue;
                 }
@@ -79,7 +74,6 @@ export default class ESBuildPlugin {
                   devtool,
                 });
 
-                // @ts-ignore
                 compilation.updateAsset(file, (old: string) => {
                   if (devtool) {
                     return new SourceMapSource(
