@@ -74,20 +74,16 @@ export default class ESBuildPlugin {
                   devtool,
                 });
 
-                compilation.updateAsset(file, (old: string) => {
-                  if (devtool) {
-                    return new SourceMapSource(
+                compilation.assets[file] = devtool
+                  ? new SourceMapSource(
                       result.js || '',
                       file,
                       result.jsSourceMap,
                       source,
                       map,
                       true,
-                    );
-                  } else {
-                    return new RawSource(result.js || '');
-                  }
-                });
+                    )
+                  : new RawSource(result.js || '');
               }
             }
           },
