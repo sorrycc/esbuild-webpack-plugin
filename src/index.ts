@@ -2,6 +2,12 @@ import { Compiler, compilation } from 'webpack';
 import { RawSource, SourceMapSource } from 'webpack-sources';
 import { startService, Service } from 'esbuild';
 
+interface transformOptions {
+  source: string;
+  file: string;
+  devtool?: string | boolean;
+}
+
 export default class ESBuildPlugin {
   options = {};
   static service: Service;
@@ -16,15 +22,7 @@ export default class ESBuildPlugin {
     }
   }
 
-  async transformCode({
-    source,
-    file,
-    devtool,
-  }: {
-    source: string;
-    file: string;
-    devtool: string | boolean | undefined;
-  }) {
+  async transformCode({ source, file, devtool }: transformOptions) {
     let result: any;
 
     const transform = async () =>
