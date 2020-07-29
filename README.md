@@ -14,18 +14,18 @@ $ yarn add esbuild-webpack-plugin
 
 ## Webpack config
 
-```javascript
-const ESBuildPlugin = require("esbuild-webpack-plugin").default;
+```js
+const ESBuildPlugin = require('esbuild-webpack-plugin').default;
 
 module.exports = {
-    optimization: {
-        minimizer: [
-            new ESBuildPlugin({
-                optimize: true,
-            }),
-        ],
-    },
-});
+  optimization: {
+    minimizer: [
+      new ESBuildPlugin({
+        optimize: true,
+      }),
+    ],
+  },
+};
 ```
 
 ## Test
