@@ -25,7 +25,7 @@
     "webpack": "^4.0.0"
   },
   "dependencies": {
-    "esbuild": "0.6.5"
+    "esbuild": "^0.6.8"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
