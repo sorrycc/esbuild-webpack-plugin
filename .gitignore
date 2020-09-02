@@ -6,3 +6,5 @@
 /test/fixtures/**/.umi
 /test/fixtures/**/dist
 /.umi
+/.idea
+/.vscode

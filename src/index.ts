@@ -1,19 +1,27 @@
 // @ts-ignore
 import { ModuleFilenameHelpers, Compiler, compilation } from 'webpack';
 import { RawSource, SourceMapSource } from 'webpack-sources';
-import { startService, Service } from 'esbuild';
+import {
+  startService,
+  Service,
+  TransformOptions,
+  TransformResult,
+} from 'esbuild';
+
+export interface ESBuildPluginOptions
+  extends Omit<TransformOptions, 'sourcefile'> {}
 
 export default class ESBuildPlugin {
-  options = {};
-  static service: Service;
+  private readonly options: ESBuildPluginOptions;
+  private static service: Service;
 
-  constructor(options: { minify: boolean }) {
+  constructor(options: ESBuildPluginOptions = {}) {
     this.options = options;
   }
 
   static async ensureService(enforce?: boolean) {
-    if (!this.service || enforce) {
-      this.service = await startService();
+    if (!ESBuildPlugin.service || enforce) {
+      ESBuildPlugin.service = await startService();
     }
   }
 
@@ -26,14 +34,14 @@ export default class ESBuildPlugin {
     file: string;
     devtool: string | boolean | undefined;
   }) {
-    let result: any;
+    let result: TransformResult | undefined;
 
     const transform = async () =>
       await ESBuildPlugin.service.transform(source, {
-        ...this.options,
         minify: true,
         sourcemap: !!devtool,
         sourcefile: file,
+        ...this.options,
       });
 
     try {
@@ -51,7 +59,7 @@ export default class ESBuildPlugin {
     return result;
   }
 
-  apply(compiler: Compiler) {
+  apply(compiler: Compiler): void {
     const matchObject = ModuleFilenameHelpers.matchObject.bind(undefined, {});
     const { devtool } = compiler.options;
 
@@ -80,12 +88,12 @@ export default class ESBuildPlugin {
                 });
 
                 // @ts-ignore
-                compilation.updateAsset(file, (old: string) => {
+                compilation.updateAsset(file, () => {
                   if (devtool) {
                     return new SourceMapSource(
                       result.js || '',
                       file,
-                      result.jsSourceMap,
+                      result.jsSourceMap as any,
                       source,
                       map,
                       true,
