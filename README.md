@@ -9,7 +9,7 @@ Use [esbuild](https://github.com/evanw/esbuild) as minifier for webpack.
 ## Install
 
 ```bash
-$ yarn add esbuild-webpack-plugin
+$ yarn add esbuild-webpack-plugin --dev
 ```
 
 ## Webpack config
@@ -20,9 +20,8 @@ const ESBuildPlugin = require('esbuild-webpack-plugin').default;
 module.exports = {
   optimization: {
     minimizer: [
-      new ESBuildPlugin({
-        optimize: true,
-      }),
+      // For plugin options, please refer: https://github.com/evanw/esbuild
+      new ESBuildPlugin({...}),
     ],
   },
 };
@@ -30,17 +29,17 @@ module.exports = {
 
 ## Test
 
-```bash
-// Get prepared
+```shell script
+# Get prepared
 $ yarn && yarn build
 
-// Minify with terser
+# Minify with terser
 $ yarn build:example
 
-// Minify with esbuild
+# Minify with esbuild
 $ yarn build:example:esbuild
 
-// Do not minify
+# Do not minify
 $ yarn build:example:nocompress
 ```
 
