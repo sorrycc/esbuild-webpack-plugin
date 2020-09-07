@@ -9,7 +9,7 @@ import {
 } from 'esbuild';
 
 export interface ESBuildPluginOptions
-  extends Omit<TransformOptions, 'sourcefile'> {}
+  extends Omit<TransformOptions, 'minify' | 'sourcemap' | 'sourcefile'> {}
 
 export default class ESBuildPlugin {
   private readonly options: ESBuildPluginOptions;
@@ -38,10 +38,10 @@ export default class ESBuildPlugin {
 
     const transform = async () =>
       await ESBuildPlugin.service.transform(source, {
+        ...this.options,
         minify: true,
         sourcemap: !!devtool,
         sourcefile: file,
-        ...this.options,
       });
 
     try {
