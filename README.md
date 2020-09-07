@@ -20,8 +20,14 @@ const ESBuildPlugin = require('esbuild-webpack-plugin').default;
 module.exports = {
   optimization: {
     minimizer: [
-      // For plugin options, please refer: https://github.com/evanw/esbuild
-      new ESBuildPlugin({...}),
+      new ESBuildPlugin(),
+      /**
+       * Or customize ESBuild options like below:
+       *
+       * new ESBuildPlugin({target: "es5"}),
+       *
+       * For details, please refer: https://github.com/evanw/esbuild
+       */
     ],
   },
 };
