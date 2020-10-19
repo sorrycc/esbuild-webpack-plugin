@@ -1,6 +1,6 @@
 {
   "name": "esbuild-webpack-plugin",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Use esbuild as minifier.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
