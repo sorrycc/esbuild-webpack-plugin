@@ -48,7 +48,10 @@ export default class ESBuildPlugin {
       result = await transform();
     } catch (e) {
       // esbuild service might be destroyed when using parallel-webpack
-      if (e.message === 'The service is no longer running') {
+      if ([
+        'The service is no longer running',
+        'The service was stopped'
+      ].includes(e.message)) {
         await ESBuildPlugin.ensureService(true);
         result = await transform();
       } else {
