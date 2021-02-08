@@ -9,7 +9,7 @@ import {
 } from 'esbuild';
 
 export interface ESBuildPluginOptions
-  extends Omit<TransformOptions, 'minify' | 'sourcemap' | 'sourcefile'> {}
+  extends Omit<TransformOptions, 'minify' | 'sourcefile'> {}
 
 export default class ESBuildPlugin {
   private readonly options: ESBuildPluginOptions;
@@ -38,9 +38,9 @@ export default class ESBuildPlugin {
 
     const transform = async () =>
       await ESBuildPlugin.service.transform(source, {
+        sourcemap: !!devtool,
         ...this.options,
         minify: true,
-        sourcemap: !!devtool,
         sourcefile: file,
       });
 
@@ -48,10 +48,12 @@ export default class ESBuildPlugin {
       result = await transform();
     } catch (e) {
       // esbuild service might be destroyed when using parallel-webpack
-      if ([
-        'The service is no longer running',
-        'The service was stopped'
-      ].includes(e.message)) {
+      if (
+        [
+          'The service is no longer running',
+          'The service was stopped',
+        ].includes(e.message)
+      ) {
         await ESBuildPlugin.ensureService(true);
         result = await transform();
       } else {
@@ -92,7 +94,7 @@ export default class ESBuildPlugin {
 
                 // @ts-ignore
                 compilation.updateAsset(file, () => {
-                  if (devtool) {
+                  if (devtool || this.options.sourcemap) {
                     return new SourceMapSource(
                       result.js || '',
                       file,
