@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "tsc -w --p src",
-    "build": "rm -rf dist && tsc -p src",
+    "build": "rm -rf dist && tsc --skipLibCheck -p src",
     "build:example": "APP_ROOT=example BABEL_CACHE=none TERSER_CACHE=none umi build",
     "build:example:esbuild": "ESBUILD=1 APP_ROOT=example BABEL_CACHE=none TERSER_CACHE=none umi build",
     "build:example:nocompress": "COMPRESS=none APP_ROOT=example BABEL_CACHE=none TERSER_CACHE=none umi build",
